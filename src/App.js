@@ -1,26 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react"
+import "./App.css"
+import { useSelector, useDispatch } from "react-redux"
+import { addTask, removeTask } from './redux/todo/todo.actions'
 
-function App() {
+const App = () => {
+  
+  const tasks = useSelector((state) => state.tasks);
+  const dispatch = useDispatch()
+  
+  const save = (e) => {
+    e.preventDefault()
+    dispatch(addTask(e.target.task.value))
+  }
+
+  const remove = (id) => {
+    dispatch(removeTask(id))
+  }
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <form onSubmit={(e) => save(e)}>
+          <input type="text" name="task" />
+          <button>Save</button>
+        </form>
+        <div>
+          <ul>
+            {tasks.map((item) => {
+              return <li key={item.id}>{item.value} <button onClick={()=> {remove(item.id)}}>Remove</button></li>
+            })}
+          </ul>
+        </div>
       </header>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
